@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 20,
               ),
               Text(
-                "Lorem Ipsum es simplemente el texto de relleno de las imprentas y "
+                "Lorem Ipsum es simplemente el texto de relleno de las imprentas"
                 "archivos de text oLorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500",
                 style: TextStyle(color: Colors.black),
               ),
