@@ -1,158 +1,89 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Product> fruitsList = [
-    Product(name: "Mango", price: "100"),
-    Product(name: "Banana", price: "50"),
-    Product(name: "Orange", price: "75"),
-    Product(name: "Apple", price: "100"),
-    Product(name: "Grapes", price: "200"),
-    Product(name: "Strawberry", price: "95"),
-    Product(name: "Watermelon", price: "60"),
-  ];
-
-  Map<String, int> cart = {}; // Key: Unique identifier, Value: Count
-
-  void addCart(index) {
-    final product = fruitsList[index];
-    final uniqueIdentifier = '${product.name}${product.price}';
-
-    setState(() {
-      // Check if the cart map is initialized and not null
-      cart[uniqueIdentifier] = (cart[uniqueIdentifier] ?? 0) + 1;
-
-      if (cart[uniqueIdentifier] == 5) {
-        _showCongratulationsDialog(product.name);
-      }
-    });
-  }
-
-  void _showCongratulationsDialog(String productName) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Congratulations!'),
-          content: Text('You\'ve bought 5 $productName!'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    // Determine the number of columns based on orientation
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+    final numColumns =
+        isPortrait ? 3 : 2; // 3 columns in portrait, 2 in landscape
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Product List"),
+        title: Text("Profile"),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              ListView.builder(
-                itemCount: fruitsList.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  final product = fruitsList[index];
-                  final uniqueIdentifier = '${product.name}${product.price}';
-                  final count = cart[uniqueIdentifier] ?? 0;
-
-                  return ListTile(
-                    title: Text("${product.name}"),
-                    subtitle: Text("${product.price} tk"),
-                    trailing: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text("Count: $count"),
-                        ElevatedButton(
-                          onPressed: () {
-                            addCart(index);
-                          },
-                          child: Text("Buy Now"),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+              Center(
+                child: CircleAvatar(
+                  radius: 100,
+                  backgroundImage: AssetImage('assets/images/cam.jpg'),
+                ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CartPage(
-                        cart: cart,
-                        fruitsList: fruitsList,
-                      ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "John Doe",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "Lorem Ipsum es simplemente el texto de relleno de las imprentas y "
+                "archivos de text oLorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500",
+                style: TextStyle(color: Colors.black),
+              ),
+              OrientationBuilder(
+                builder: (context, orientation) {
+                  return GridView.builder(
+                    itemCount: 6, // Total number of images
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount:
+                          numColumns, // Number of columns based on orientation
+                      crossAxisSpacing: 8.0, // Horizontal spacing between items
+                      mainAxisSpacing: 8.0, // Vertical spacing between items
                     ),
+                    itemBuilder: (context, index) {
+                      // You can replace 'cam.jpg' with the appropriate image paths
+                      final imagePath = 'assets/images/Nature-PNG.png';
+                      return Image.asset(imagePath);
+                    },
                   );
                 },
-                child: Text("Go to Cart"),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class Product {
-  String name;
-  String price;
-  Product({required this.name, required this.price});
-}
-
-class CartPage extends StatelessWidget {
-  final Map<String, int> cart;
-  final List<Product> fruitsList;
-
-  CartPage({required this.cart, required this.fruitsList});
-
-  @override
-  Widget build(BuildContext context) {
-    // Calculate the total number of unique products in the cart
-    int totalUniqueProducts = cart.keys.length;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Cart'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Total Unique Products: $totalUniqueProducts'),
-            // Display other cart items here
-          ],
         ),
       ),
     );
