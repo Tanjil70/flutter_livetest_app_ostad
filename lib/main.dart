@@ -46,7 +46,7 @@ class ImageFeed extends StatelessWidget {
           crossAxisSpacing: 8.0,
           mainAxisSpacing: 8.0,
         ),
-        itemCount: 6,
+        itemCount: imageUrls.length,
         itemBuilder: (context, index) {
           final imageUrl = imageUrls[index];
           return Card(
